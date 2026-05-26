@@ -1,4 +1,4 @@
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page, Locator
 
 from pages.base_page import BasePage
 
@@ -6,7 +6,6 @@ from pages.base_page import BasePage
 class ChatPage(BasePage):
     def __init__(self, page: Page) -> None:
         super().__init__(page)
-
         self.message_input = page.locator("[data-qa-verified-message-input]")
         self.send_button = page.locator("[data-qa-verified-send-message-button]")
 
@@ -17,10 +16,8 @@ class ChatPage(BasePage):
         self.message_input.fill(message)
         self.send_button.click()
 
-    def verify_message_visible(self, message: str, ) -> None:
-        message_locator = self.page.locator(f"[data-qa-verified-message-text='{message}']")
-        expect(message_locator).to_be_visible()
+    def message_by_text(self, message: str) -> Locator:
+        return self.page.locator(f"[data-qa-verified-message-text='{message}']")
 
-    def verify_message_delivered(self, message: str) -> None:
-        delivered_status = self.page.locator(f"[data-qa-verified-message-status='{message}_delivered']")
-        expect(delivered_status).to_be_visible()
+    def message_delivered_status(self, message: str) -> Locator:
+        return self.page.locator(f"[data-qa-verified-message-status='{message}_delivered']")
